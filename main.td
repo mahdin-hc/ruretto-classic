@@ -6,7 +6,7 @@ import "os"
 import "path"
 import "audio"
 import "fs"
-import "helper/randint" // https://github.com/2dprototype/tender-free/blob/master/pkg/helper/randint.td
+import "helper/randint" // https://github.com/2dprototype/tender/blob/master/pkg/helper/randint.td
 import "table"
 import "funcs"
 import "wheel"
@@ -51,7 +51,7 @@ var radius = 3.5*scale
 var cy = b_y + 100
 var cx = b_x - 150
 var is_gameover = false
-var font_data = embed("res/IBMPlexSans-Bold.ttf")
+var font_data = embed("res/NotoSerif-Medium.ttf")
 var comment = ""
 
 fn save_file(){
@@ -121,25 +121,6 @@ fn draw(ctx) {
 	ctx.clear()
 	ctx.fontface(font_data, scale/2.5)
 	ctx.linewidth(1.2)
-	for i, items in table {
-		for j, item in items {
-			ctx.hex(item.color)
-			x := b_x + i*scale
-			y := b_y + j*scale
-			ctx.rect(x, y, scale, scale)
-			ctx.fill()	
-			if item.color == theme.red {
-				ctx.hex(theme.black)
-			}	
-			else if item.color == theme.black {
-				ctx.hex(theme.red)
-			}
-			kl := ctx.measure_text(item.number)
-			ctx.text(item.number, x - (kl[0]/2) + scale/2, y + (kl[1]/2)  + scale/2)
-			ctx.fill()	
-			bounds.push([x, y, scale, scale, item.number])
-		}
-	}
 	for i := 0; i < 3; i++ {
 		ctx.hex(theme.white)
 		x := b_x + i*scale*4
@@ -185,7 +166,7 @@ fn draw(ctx) {
 		ctx.fill()
 		bounds.push([x, y, scale, scale, 49+j])		
 	}
-	
+
 	
 	x := b_x - scale
 	y := b_y
@@ -232,6 +213,26 @@ fn draw(ctx) {
 		}
 	}
 	
+	// ctx.fontface(font_data, scale/2.5)
+	// ctx.linewidth(1.2)
+	for i, items in table {
+		for j, item in items {
+			x := b_x + i*scale
+			y := b_y + j*scale
+			ctx.hex(item.color)
+			ctx.rect(x, y, scale, scale)
+			ctx.fill()	
+			ctx.hex(theme.white)	
+			ctx.rect(x, y, scale, scale)
+			ctx.stroke()
+			ctx.hex(theme.white)
+			kl := ctx.measure_text(item.number)
+			ctx.text(item.number, x - (kl[0]/2) + scale/2, y + (kl[1]/2)  + scale/2)
+			ctx.fill()	
+			bounds.push([x, y, scale, scale, item.number])
+		}
+	}	
+	
 	var slots = wheel.length
 	var a = 2 * math.pi / slots
 	
@@ -249,12 +250,9 @@ fn draw(ctx) {
 		ctx.push()
 		ctx.translate(cx, cy)
 		ctx.rotate(start_angle + a / 2)
-		ctx.hex(theme.black)
-		if slot.color == theme.red {
+		ctx.hex(theme.white)
+		if index == 0 {
 			ctx.hex(theme.black)
-		}	
-		else if slot.color == theme.black {
-			ctx.hex(theme.red)
 		}
 		ctx.text(slot.number, radius - 0.6*scale, 5)
 		ctx.fill()
@@ -262,25 +260,20 @@ fn draw(ctx) {
 	}
 
 	for index, _ in wheel {
-		if index == 0 {
-			continue
-		}
 		draw_wheel(index)
 	}
 
-	ctx.hex(theme.red)
-	ctx.linewidth(2)
-
+	ctx.hex(theme.white)
+	ctx.linewidth(1.2)
+	
 	ctx.circle(cx, cy, radius-0.8*scale)
 	ctx.stroke()
-	
-	draw_wheel(0)
 	
 	ctx.hex(theme.bg)
 	ctx.circle(cx, cy, radius-1.66*scale)
 	ctx.fill()
 	
-	ctx.hex(theme.red)
+	ctx.hex(theme.white)
 	ctx.circle(cx, cy, radius-1.66*scale)
 	ctx.stroke()
 
@@ -332,19 +325,10 @@ fn draw(ctx) {
 	
 	if previous_bet != null {
 		kl := ctx.measure_text(previous_bet.number)
-		ctx.hex(previous_bet.color)
-		if previous_bet.color == theme.black {
-			ctx.hex(theme.white + "10")
-		}
+		ctx.hex(theme.white)
 		ctx.circle(cx, cy, scale/2)
 		ctx.fill()	
 		ctx.hex(theme.black)
-		if previous_bet.color == theme.red {
-			ctx.hex(theme.black)
-		}
-		else if previous_bet.color == theme.black {
-			ctx.hex(theme.red)
-		}
 		ctx.text(previous_bet.number, cx - kl[0]/2, cy + kl[1]/2)
 		ctx.fill()
 	}
@@ -514,7 +498,7 @@ canvas.new_window(w, h, "Rūretto", fn(window){
 								ctx.hex(theme.bg)
 								ctx.circle(cx, cy, radius-1.66*scale)
 								ctx.fill()
-								ctx.hex(theme.red)
+								ctx.hex(theme.white)
 								ctx.circle(cx, cy, radius-1.66*scale)
 								ctx.stroke()
 								

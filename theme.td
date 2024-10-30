@@ -1,9 +1,9 @@
 export {
 	green: "#26cb21",
-	red: "#ff2c2c",
-	black: "#1c1c1c",
+	red: "#ff0000",
+	black: "#000000",
 	white: "#ffffff",
-	bg: "#1c1c1c",
+	bg: "#093f02",
 	chip: "#ffe72c",
-	ball: "#feff2c"
+	ball: "#ffff00"
 }
